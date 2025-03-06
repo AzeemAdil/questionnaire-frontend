@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap");
+@import url("https://use.typekit.net/ubt4pqk.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #005fef;
+  --background: #ffffff;
+  --background-paper: #F2f2f2;
+  --text-primary: #000000;
+  --text-secondary: #757575;
+  --error: #940900;
+  --success: #21dc11;
+}
+
+[data-theme="dark"] {
+  --background: #000000;
+  --background-paper: #0d0d0d;
+  --text-primary: #ffffff;
+  --text-secondary: #757575;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Newsreader", serif !important;
+}
+
+div,
+span,
+a,
+button,
+input,
+textarea {
+  font-family: "acumin-pro", sans-serif !important;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+p {
+  font-family: "acumin-pro-wide", sans-serif !important;
+  font-weight: 400;
+  font-style: normal;
+}
