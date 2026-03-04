@@ -3,11 +3,11 @@ import ConfigWrapper from "@/common/configWrapper";
 import { Metadata } from "next/types";
 import { ASSETS } from '@/helpers/assets';
 
-const baseURL = "https://test.com";
+const baseURL = process.env.NEXT_PUBLIC_APP_URL || "https://localhost:3000";
 const pageUrl = `${baseURL}/`;
-const pageImage = `${baseURL}${ASSETS.americaImage}`;
-const title = `Title`;
-const description = "description";
+const pageImage = `${baseURL}${ASSETS.logo}`;
+const title = "Questionnaire App";
+const description = "Create and share questionnaires, collect responses.";
 
 export const metadata: Metadata = {
 	title: title,

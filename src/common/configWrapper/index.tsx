@@ -5,7 +5,7 @@ import MUIThemeProvider from '@/theme/ThemeProvider';
 import { ASSETS } from '@/helpers/assets';
 import { ReactQueryProvider } from '../queryProvider';
 import { Toaster } from 'react-hot-toast';
-import UserProvider from '../userProvider';
+import { AuthProvider } from '../authProvider';
 
 export default function ConfigWrapper({
     children,
@@ -18,12 +18,12 @@ export default function ConfigWrapper({
             <ReactQueryProvider>
                 <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem>
                     <MUIThemeProvider>
-                        <UserProvider>
+                        <AuthProvider>
                             <div className="bg-background">
                                 {children}
                             </div>
                             <Toaster />
-                        </UserProvider>
+                        </AuthProvider>
                     </MUIThemeProvider>
                 </ThemeProvider>
             </ReactQueryProvider>

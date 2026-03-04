@@ -1,9 +1,6 @@
-
-
-
 export const ASSETS = {
-    americaFav: '/icons/america.svg',
-    americaImage: '/images/america.svg',
-
-    
-}
+  favIcon: "/icons/america.svg",
+  logo: "/images/america.svg",
+  americaFav: "/icons/america.svg",
+  americaImage: "/images/america.svg",
+};
