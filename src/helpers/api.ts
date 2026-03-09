@@ -1,6 +1,7 @@
 import {
 	AuthSuccessResponse,
 	GenericData,
+	Login,
 	SignupFormData,
 	UserData
 } from "@/interfaces";
@@ -22,3 +23,10 @@ export const getUser = async () => {
 		url: "/user",
 	});
 };
+
+export const login = async () => {
+	return apiRequest<GenericData<Login>>({
+		method: "POST",
+		url:"/auth/login"
+	})
+}

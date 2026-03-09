@@ -24,3 +24,15 @@ export interface UserData {
 	lastName: string;
 	email: string;
 }
+
+export interface Login {
+	email: string
+	password: string
+}
+
+export const loginSchema = z.object({
+	email: z.string().email("Invalid email address"),
+	password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+export type LoginFormData = z.infer<typeof loginSchema>;
