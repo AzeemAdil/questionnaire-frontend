@@ -11,13 +11,17 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import type { LoginFormData } from "@/interfaces";
+import type { LoginFormData, LoginResponse } from "@/interfaces";
 import { loginSchema } from "@/interfaces";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { login } from "@/helpers/api"
+import { login } from "@/helpers/api";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -26,8 +30,21 @@ const LoginPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: login,
+    onSuccess: (response: LoginResponse) => {
+      localStorage.setItem("accessToken", response.data.token);
+
+      toast.success("Login Successful!");
+      router.push("/dashboard");
+    },
+    onError: (error: Error) => {
+      console.log(error);
+      toast.error(error.message || "Something went wrong");
+    },
+  });
   const onSubmit = (data: LoginFormData) => {
-    console.log("Form Date", data);
+    mutate(data);
   };
 
   return (
@@ -85,9 +102,10 @@ const LoginPage = () => {
                   variant="contained"
                   size="large"
                   fullWidth
+                  disabled={isPending}
                   sx={{ mt: 2 }}
                 >
-                  Login
+                  {isPending ? "Logging in..." : "Login"}
                 </Button>
               </Stack>
             </Box>

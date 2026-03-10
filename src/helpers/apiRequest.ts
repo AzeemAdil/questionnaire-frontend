@@ -1,4 +1,3 @@
-import { AuthSuccessResponse, GenericData } from "@/interfaces";
 import axios, { AxiosRequestConfig, AxiosProgressEvent } from "axios";
 import { CONSTANTS } from "./constants";
 
@@ -19,51 +18,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (error.response.data.Msg === "jwt expired" && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const refreshResponse = await axios.post<
-          GenericData<AuthSuccessResponse>
-        >(`${CONSTANTS.API_ENDPOINT}/auth/login/refresh-token`, {
-          refreshToken: localStorage.getItem("refreshToken"),
-        });
-
-        // if token API returns new token
-        if (refreshResponse.status === 200) {
-          // save new token to localStorage
-          localStorage.setItem(
-            "@access-token",
-            refreshResponse.data.data.accessToken
-          );
-          localStorage.setItem(
-            "@refresh-token",
-            refreshResponse.data.data.refreshToken
-          );
-
-          // update authorization header with new token
-          originalRequest.headers["access-token"] =
-            refreshResponse.data.data.accessToken;
-
-          // retry original request with new token
-          return instance(originalRequest);
-        } else {
-          // token API failed to return new token
-          throw new Error("Failed to refresh token");
-        }
-      } catch (error) {
-        // token API call failed
-        // throw new Error("Failed to refresh token", error);
-        console.log(error);
-      }
-    }
-
-    if (error.response.data.Msg === "invalid token") {
-    }
-
+  (error) => {
     // for any other error, throw it
     return Promise.reject(error);
   }
