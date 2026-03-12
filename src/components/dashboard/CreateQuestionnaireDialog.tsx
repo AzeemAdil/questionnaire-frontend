@@ -15,7 +15,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Control, UseFormRegister, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -55,7 +55,14 @@ const CreateQuestionnaireDialog = ({
   });
 
   const onSubmit = (data: QuestionnaireFormData) => {
-    console.log("Creating Questionnaire:", data);
+    const transformedData = {
+      ...data,
+      questions: data.questions.map((q) => ({
+        ...q,
+        options: q.options.map((o) => o.value),
+      })),
+    };
+    console.log("Creating Questionnaire:", transformedData);
     // Here we would call the API to create the questionnaire
     reset();
     onClose();
@@ -180,7 +187,16 @@ const CreateQuestionnaireDialog = ({
 };
 
 // Sub-component for options for Radio and Range types
-const OptionsFieldArray = ({ index, control, register }: any) => {
+const OptionsFieldArray = ({
+  index,
+  control,
+  register,
+}: {
+  index: number;
+  control: Control<QuestionnaireFormData>;
+  register: UseFormRegister<QuestionnaireFormData>;
+  errors: FieldErrors<QuestionnaireFormData>;
+}) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: `questions.${index}.options`,
@@ -189,7 +205,7 @@ const OptionsFieldArray = ({ index, control, register }: any) => {
   // Ensure at least one option if it's not free text
   React.useEffect(() => {
     if (fields.length === 0) {
-      append("");
+      append({ value: "" });
     }
   }, [fields, append]);
 
@@ -201,7 +217,7 @@ const OptionsFieldArray = ({ index, control, register }: any) => {
             size="small"
             fullWidth
             placeholder={`Option ${optionIndex + 1}`}
-            {...register(`questions.${index}.options.${optionIndex}`)}
+            {...register(`questions.${index}.options.${optionIndex}.value`)}
           />
           <IconButton
             size="small"
@@ -216,7 +232,7 @@ const OptionsFieldArray = ({ index, control, register }: any) => {
       <Button
         size="small"
         startIcon={<AddIcon />}
-        onClick={() => append("")}
+        onClick={() => append({ value: "" })}
         sx={{ alignSelf: "flex-start", mt: 1 }}
       >
         Add Option

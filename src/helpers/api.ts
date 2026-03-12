@@ -4,7 +4,9 @@ import {
 	Login,
 	LoginResponse,
 	SignupFormData,
-	UserData
+	UserData,
+	AdminQuestionnairesResponse,
+	QuestionnaireFormData
 } from "@/interfaces";
 import { apiRequest } from "./apiRequest";
 
@@ -32,3 +34,18 @@ export const login = async (data: Login) => {
 		data
 	})
 }
+
+export const getAdminQuestionnaires = async () => {
+	return apiRequest<AdminQuestionnairesResponse>({
+		method: "GET",
+		url: "/admin/questionnaires",
+	});
+};
+
+export const createQuestionnaire = async (data: QuestionnaireFormData) => {
+	return apiRequest<AdminQuestionnairesResponse>({
+		method: "POST",
+		url: "/admin/questionnaires",
+		data,
+	});
+};

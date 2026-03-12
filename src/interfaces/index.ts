@@ -57,16 +57,16 @@ export const loginSchema = z.object({
 export type LoginFormData = z.infer<typeof loginSchema>;
 
 export enum QuestionType {
-	FREE_TEXT = "free text",
-	RADIO = "radio",
-	RANGE = "range",
+	FREE_TEXT = "FREE_TEXT",
+	RADIO = "RADIO",
+	RANGE = "RANGE",
 }
 
 export interface Question {
 	id?: string;
 	type: QuestionType;
 	text: string;
-	options?: string[];
+	options: { value: string }[];
 }
 
 export interface Questionnaire {
@@ -80,12 +80,29 @@ export interface Questionnaire {
 export const questionSchema = z.object({
 	type: z.nativeEnum(QuestionType),
 	text: z.string().min(1, "Question text is required"),
-	options: z.array(z.string()).optional(),
+	options: z.array(z.object({ value: z.string() })),
 });
 
 export const questionnaireSchema = z.object({
 	title: z.string().min(1, "Title is required"),
+	description: z.string().optional(),
 	questions: z.array(questionSchema).min(1, "At least one question is required"),
 });
 
 export type QuestionnaireFormData = z.infer<typeof questionnaireSchema>;
+
+export interface AdminQuestionnaire {
+	id: number;
+	title: string;
+	description: string;
+	slug: string;
+	questionCount: number;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface AdminQuestionnairesResponse {
+	success: boolean;
+	data: AdminQuestionnaire[];
+	count: number;
+}

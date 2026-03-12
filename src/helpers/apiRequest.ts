@@ -9,7 +9,7 @@ instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
-      config.headers["access-token"] = token;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -29,6 +29,23 @@ interface RequestConfig extends AxiosRequestConfig {
   onUploadProgress?: (progressEvent: AxiosProgressEvent) => void | number;
 }
 
+interface ApiError extends Error {
+  response?: {
+    data: {
+      success?: boolean;
+      message?: string;
+      error?: string;
+      errors?: Array<{
+        instancePath: string;
+        schemaPath: string;
+        keyword: string;
+        params: Record<string, unknown>;
+        message: string;
+      }>;
+    };
+  };
+}
+
 export const apiRequest = async <T>(config: RequestConfig): Promise<T> => {
   try {
     // Create a modified config that properly handles the progress callback
@@ -44,18 +61,10 @@ export const apiRequest = async <T>(config: RequestConfig): Promise<T> => {
     const response = await instance(modifiedConfig);
     return response.data;
   } catch (error) {
-    const errorObj = error as {
-      response?: {
-        data: {
-          message?: string;
-          error?: string;
-        };
-      };
-    };
-    throw new Error(
-      errorObj.response?.data.message ||
-        errorObj.response?.data.error ||
-        "Something went wrong"
-    );
+    const errorObj = error as ApiError;
+    const message = errorObj.response?.data.message || errorObj.response?.data.error || "Something went wrong";
+    const errorWithData = new Error(message) as ApiError;
+    errorWithData.response = errorObj.response;
+    throw errorWithData;
   }
 };

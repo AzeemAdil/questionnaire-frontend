@@ -1,120 +1,81 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-  Card,
-  CardContent,
-  IconButton,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import toast from "react-hot-toast";
-import CreateQuestionnaireDialog from "@/components/dashboard/CreateQuestionnaireDialog";
+import React from "react";
+import { Container, Stack, Typography, Button, Paper } from "@mui/material";
+import Link from "next/link";
 
-// Mock data for initial UI
-const mockQuestionnaires = [
-  { id: "1", title: "User Feedback 2024", questionCount: 5 },
-  { id: "2", title: "Product Survey", questionCount: 10 },
-];
-
-const DashboardPage = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const handleCopyLink = (id: string) => {
-    const link = `${window.location.origin}/questionnaire/${id}`;
-    navigator.clipboard.writeText(link);
-    toast.success("Link copied to clipboard!");
-  };
-
+const Dashboard = () => {
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Stack gap={4}>
-        {/* Top Section */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h4" fontWeight="bold">
-            Questionnaires
-          </Typography>
+    <Container maxWidth="lg" sx={{ py: 8 }}>
+      <Stack spacing={6} alignItems="center">
+        <Typography variant="h3" fontWeight="bold" textAlign="center">
+          Questionnaire Admin Dashboard
+        </Typography>
+
+        <Stack direction="row" spacing={4}>
           <Button
             variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setIsDialogOpen(true)}
-            sx={{ px: 3, py: 1 }}
+            size="large"
+            sx={{ px: 4, py: 1.5, borderRadius: 2 }}
+            // startIcon={<AddIcon />}
+            component={Link}
+            href="/make-questionnaire"
           >
-            Create New
+            Create Questionnaire
           </Button>
-        </Box>
+          <Button
+            variant="outlined"
+            size="large"
+            // startIcon={<ListIcon />}
+            sx={{ px: 4, py: 1.5, borderRadius: 2 , display: "flex", justifyContent:"center" , alignItems:"center" }}
+            component={Link}
+            href="/all-questionnaires"
+          >
+            View All Questionnaires
+          </Button>
+        </Stack>
 
-        {/* Recent Questionnaires Section */}
-        <Box>
-          <Typography variant="h6" sx={{ mb: 2, color: "text.secondary" }}>
-            Recent Questionnaires
+        <Paper
+          elevation={1}
+          sx={{
+            p: 4,
+            borderRadius: 4,
+            maxWidth: "lg",
+            border: "1px solid",
+            borderColor: "divider",
+          }}
+        >
+          <Typography variant="h5" gutterBottom fontWeight="600">
+            How to use the app:
           </Typography>
-          <Grid container spacing={3}>
-            {mockQuestionnaires.map((q) => (
-              <Grid item xs={12} sm={6} md={4} key={q.id}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    boxShadow: 2,
-                    borderRadius: 3,
-                    transition: "transform 0.2s",
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow: 4,
-                    },
-                  }}
-                >
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="flex-start"
-                    >
-                      <Box>
-                        <Typography variant="h6" fontWeight="bold" gutterBottom>
-                          {q.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {q.questionCount} Questions
-                        </Typography>
-                      </Box>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleCopyLink(q.id)}
-                        size="small"
-                        title="Copy Link"
-                      >
-                        <ContentCopyIcon fontSize="small" />
-                      </IconButton>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+          <Typography
+            variant="body1"
+            component="div"
+            sx={{ color: "text.secondary", lineHeight: 2 }}
+          >
+            <ol>
+              <li>
+                Click <strong>Create Questionnaire</strong> to start building a
+                new set of questions.
+              </li>
+              <li>
+                Choose between <strong>Free Text, Radio, or Range</strong> for
+                each question type.
+              </li>
+              <li>
+                Once saved, you can find your questionnaire in the{" "}
+                <strong>View All</strong> section.
+              </li>
+              <li>
+                Copy the unique link and share it with your users to start
+                collecting responses.
+              </li>
+            </ol>
+          </Typography>
+        </Paper>
       </Stack>
-
-      <CreateQuestionnaireDialog
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-      />
     </Container>
   );
 };
 
-export default DashboardPage;
+export default Dashboard;
