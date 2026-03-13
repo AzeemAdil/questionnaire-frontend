@@ -6,7 +6,9 @@ import {
 	SignupFormData,
 	UserData,
 	AdminQuestionnairesResponse,
-	QuestionnaireFormData
+	QuestionnaireFormData,
+	Questionnaire,
+	SubmitResponsePayload
 } from "@/interfaces";
 import { apiRequest } from "./apiRequest";
 
@@ -46,6 +48,29 @@ export const createQuestionnaire = async (data: QuestionnaireFormData) => {
 	return apiRequest<AdminQuestionnairesResponse>({
 		method: "POST",
 		url: "/admin/questionnaires",
+		data,
+	});
+};
+
+export const getPublicQuestionnaire = async (slug: string) => {
+	return apiRequest<GenericData<Questionnaire>>({
+		method: "GET",
+		url: `/questionnaires/${slug}`,
+	});
+};
+
+export const checkEmailResponse = async (slug: string, email: string) => {
+	return apiRequest<GenericData<{ alreadySubmitted: boolean }>>({
+		method: "POST",
+		url: `/questionnaires/${slug}/check-email`,
+		data: { email },
+	});
+};
+
+export const submitQuestionnaireResponse = async (slug: string, data: SubmitResponsePayload) => {
+	return apiRequest<GenericData<any>>({
+		method: "POST",
+		url: `/questionnaires/${slug}/responses`,
 		data,
 	});
 };

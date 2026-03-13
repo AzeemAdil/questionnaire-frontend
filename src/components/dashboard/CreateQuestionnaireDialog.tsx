@@ -59,7 +59,7 @@ const CreateQuestionnaireDialog = ({
       ...data,
       questions: data.questions.map((q) => ({
         ...q,
-        options: q.options.map((o) => o.value),
+        options: q.options.map((o) => o.label),
       })),
     };
     console.log("Creating Questionnaire:", transformedData);
@@ -205,7 +205,7 @@ const OptionsFieldArray = ({
   // Ensure at least one option if it's not free text
   React.useEffect(() => {
     if (fields.length === 0) {
-      append({ value: "" });
+      append({ label: "" });
     }
   }, [fields, append]);
 
@@ -217,7 +217,7 @@ const OptionsFieldArray = ({
             size="small"
             fullWidth
             placeholder={`Option ${optionIndex + 1}`}
-            {...register(`questions.${index}.options.${optionIndex}.value`)}
+            {...register(`questions.${index}.options.${optionIndex}.label`)}
           />
           <IconButton
             size="small"
@@ -232,7 +232,7 @@ const OptionsFieldArray = ({
       <Button
         size="small"
         startIcon={<AddIcon />}
-        onClick={() => append({ value: "" })}
+        onClick={() => append({ label: "" })}
         sx={{ alignSelf: "flex-start", mt: 1 }}
       >
         Add Option

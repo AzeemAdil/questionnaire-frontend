@@ -8,6 +8,7 @@ import { questionnaireSchema, QuestionnaireFormData, QuestionType } from "@/inte
 import { createQuestionnaire } from "@/helpers/api";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { ApiError } from "@/helpers/apiRequest";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useMutation } from "@tanstack/react-query";
@@ -28,7 +29,7 @@ const OptionsFieldArray = ({
 
   React.useEffect(() => {
     if (fields.length === 0) {
-      append({ value: "" });
+      append({ label: "" });
     }
   }, [fields, append]);
 
@@ -44,7 +45,7 @@ const OptionsFieldArray = ({
               fullWidth
               size="small"
               placeholder={`Option ${index + 1}`}
-              {...register(`questions.${questionIndex}.options.${index}.value`)}
+              {...register(`questions.${questionIndex}.options.${index}.label`)}
             />
             <IconButton
               size="small"
@@ -59,7 +60,7 @@ const OptionsFieldArray = ({
         <Button
           startIcon={<AddIcon />}
           size="small"
-          onClick={() => append({ value: "" })}
+          onClick={() => append({ label: "" })}
           sx={{ alignSelf: "flex-start" }}
         >
           Add Option
@@ -106,31 +107,22 @@ const MakeQuestionnaire = () => {
       toast.success("Questionnaire created successfully!");
       router.push("/all-questionnaires");
     },
-    onError: (error) => {
+    onError: (error: ApiError) => {
       console.error("Mutation Error:", error);
-      if (error) {
-        console.error("Error Response Data:", error);
+      if (error.response) {
+        console.error("Error Response Data:", error.response.data);
       }
       toast.error(error.message || "Something went wrong");
     },
   });
 
   const onSubmit = (data: QuestionnaireFormData) => {
-    console.log("Form Data:", data);
-    const transformedData = {
-      ...data,
-      questions: data.questions.map((q) => ({
-        ...q,
-        options: q.options.map((o) => o.value),
-      })),
-    };
-    console.log("Submitting Transformed Data:", transformedData);
-    // @ts-expect-error - transformedData has string[] instead of object array
-    mutate(transformedData);
+    console.log("Submitting Data:", data);
+    mutate(data);
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 8 }}>
+      <Container maxWidth="md" sx={{ py: 8 }}>
       <Typography variant="h3" fontWeight="bold" gutterBottom>
         Create New Questionnaire
       </Typography>

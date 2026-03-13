@@ -66,7 +66,7 @@ export interface Question {
 	id?: string;
 	type: QuestionType;
 	text: string;
-	options: { value: string }[];
+	options: { label: string }[];
 }
 
 export interface Questionnaire {
@@ -80,7 +80,7 @@ export interface Questionnaire {
 export const questionSchema = z.object({
 	type: z.nativeEnum(QuestionType),
 	text: z.string().min(1, "Question text is required"),
-	options: z.array(z.object({ value: z.string() })),
+	options: z.array(z.object({ label: z.string() })),
 });
 
 export const questionnaireSchema = z.object({
@@ -105,4 +105,14 @@ export interface AdminQuestionnairesResponse {
 	success: boolean;
 	data: AdminQuestionnaire[];
 	count: number;
+}
+
+export interface AnswerResponse {
+	questionId: number;
+	value: string;
+}
+
+export interface SubmitResponsePayload {
+	email: string;
+	answers: AnswerResponse[];
 }

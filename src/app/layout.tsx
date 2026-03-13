@@ -2,12 +2,14 @@ import "@/styles/globals.scss";
 import ConfigWrapper from "@/common/configWrapper";
 import { Metadata } from "next/types";
 import { ASSETS } from "@/helpers/assets";
+import ThemeToggle from "@/components/ThemeToggle";
+import { Box } from "@mui/material";
 
 const baseURL = "https://test.com";
 const pageUrl = `${baseURL}/`;
-const pageImage = `${baseURL}${ASSETS.americaImage}`;
-const title = `Title`;
-const description = "description";
+const pageImage = `${baseURL}${ASSETS.favIcon}`;
+const title = `Questionnaire App`;
+const description = "Create and share questionnaires easily.";
 
 export const metadata: Metadata = {
   title: title,
@@ -47,7 +49,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ConfigWrapper>{children}</ConfigWrapper>
+        <ConfigWrapper>
+          <Box sx={{ position: "fixed", top: 20, right: 20, zIndex: 9999 }}>
+            <ThemeToggle />
+          </Box>
+          {children}
+        </ConfigWrapper>
       </body>
     </html>
   );

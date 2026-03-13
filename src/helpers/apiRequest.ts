@@ -29,7 +29,7 @@ interface RequestConfig extends AxiosRequestConfig {
   onUploadProgress?: (progressEvent: AxiosProgressEvent) => void | number;
 }
 
-interface ApiError extends Error {
+export interface ApiError extends Error {
   response?: {
     data: {
       success?: boolean;

@@ -6,13 +6,13 @@
 @tailwind utilities;
 
 :root {
-  --primary: #005fef;
-  --background: #ffffff;
+  --primary: #4d8eef;
+  --background: #ffffffe2;
   --background-paper: #F2f2f2;
   --text-primary: #000000;
   --text-secondary: #757575;
   --error: #940900;
-  --success: #21dc11;
+  --success: #0e1710;
 }
 
 [data-theme="dark"] {
