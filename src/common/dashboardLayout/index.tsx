@@ -28,14 +28,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <div
-            className='w-full h-[100svh] flex flex-col lg:flex-row  overflow-hidden'
+            className='w-full h-full flex flex-col lg:flex-row  overflow-hidden'
         >
             <div
-                className='h-full hidden lg:flex flex-col justify-between w-[280px] p-5 '
+                className='h-full hidden lg:flex flex-col justify-between  p-5 '
             >
-                <div className="flex flex-col gap-3">
-                    <h1>Side bar</h1>
-                </div>
                 <div>
                     <ThemeToggle />
                 </div>
