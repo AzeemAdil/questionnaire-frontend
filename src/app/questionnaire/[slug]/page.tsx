@@ -13,7 +13,6 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Slider,
   CircularProgress,
   Fade,
 } from "@mui/material";
@@ -26,7 +25,11 @@ import { Questionnaire, QuestionType, Question } from "@/interfaces";
 import toast from "react-hot-toast";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-export default function QuestionnairePage({ params }: { params: { slug: string } }) {
+export default function QuestionnairePage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const { slug } = params;
 
   // Flow State
@@ -36,7 +39,9 @@ export default function QuestionnairePage({ params }: { params: { slug: string }
 
   // Data State
   const [email, setEmail] = useState("");
-  const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(
+    null,
+  );
   const [answers, setAnswers] = useState<Record<number, string>>({});
 
   // Handlers
@@ -59,7 +64,7 @@ export default function QuestionnairePage({ params }: { params: { slug: string }
       setStep(1);
     } catch (err) {
       console.error(err);
-      toast.error( "Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -114,14 +119,18 @@ export default function QuestionnairePage({ params }: { params: { slug: string }
             variant="outlined"
             placeholder="Type your answer here..."
             value={value}
-            onChange={(e) => updateAnswer(question.id as unknown as number, e.target.value)}
+            onChange={(e) =>
+              updateAnswer(question.id as unknown as number, e.target.value)
+            }
           />
         );
       case QuestionType.RADIO:
         return (
           <RadioGroup
             value={value}
-            onChange={(e) => updateAnswer(question.id as unknown as number, e.target.value)}
+            onChange={(e) =>
+              updateAnswer(question.id as unknown as number, e.target.value)
+            }
           >
             {question.options.map((opt, idx) => (
               <FormControlLabel
@@ -135,25 +144,21 @@ export default function QuestionnairePage({ params }: { params: { slug: string }
         );
       case QuestionType.RANGE:
         return (
-          <Box sx={{ px: 2, pt: 4 }}>
-            <Slider
-              value={parseInt(value) || 0}
-              min={0}
-              max={10}
-              step={1}
-              marks
-              valueLabelDisplay="on"
-              onChange={(_, val) => updateAnswer(question.id as unknown as number, val.toString())}
-            />
-            <Stack direction="row" justifyContent="space-between" sx={{ mt: 1 }}>
-              <Typography variant="caption" color="text.secondary">
-                Low
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                High
-              </Typography>
-            </Stack>
-          </Box>
+          <RadioGroup
+            value={value}
+            onChange={(e) =>
+              updateAnswer(question.id as unknown as number, e.target.value)
+            }
+          >
+            {question.options.map((opt, idx) => (
+              <FormControlLabel
+                key={idx}
+                value={opt.label}
+                control={<Radio />}
+                label={opt.label}
+              />
+            ))}
+          </RadioGroup>
         );
       default:
         return null;
@@ -190,7 +195,12 @@ export default function QuestionnairePage({ params }: { params: { slug: string }
             {step === 0 && (
               <Stack spacing={4} sx={{ my: "auto" }}>
                 <Box textAlign="center">
-                  <Typography variant="h4" fontWeight="800" gutterBottom color="primary">
+                  <Typography
+                    variant="h4"
+                    fontWeight="800"
+                    gutterBottom
+                    color="primary"
+                  >
                     Welcome!
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
@@ -226,64 +236,76 @@ export default function QuestionnairePage({ params }: { params: { slug: string }
             )}
 
             {/* QUESTION STEPS */}
-            {step > 0 && questionnaire && step <= questionnaire.questions.length && (
-              <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-                <Box sx={{ mb: 4 }}>
-                  <Typography
-                    variant="caption"
-                    fontWeight="bold"
-                    color="primary"
-                    sx={{ mb: 1, display: "block" }}
-                  >
-                    QUESTION {step} OF {questionnaire.questions.length}
-                  </Typography>
-                  <LinearProgress
-                    variant="determinate"
-                    value={(step / questionnaire.questions.length) * 100}
-                    sx={{ height: 10, borderRadius: 5 }}
-                  />
-                </Box>
+            {step > 0 &&
+              questionnaire &&
+              step <= questionnaire.questions.length && (
+                <Box
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Box sx={{ mb: 4 }}>
+                    <Typography
+                      variant="caption"
+                      fontWeight="bold"
+                      color="primary"
+                      sx={{ mb: 1, display: "block" }}
+                    >
+                      QUESTION {step} OF {questionnaire.questions.length}
+                    </Typography>
+                    <LinearProgress
+                      variant="determinate"
+                      value={(step / questionnaire.questions.length) * 100}
+                      sx={{ height: 10, borderRadius: 5 }}
+                    />
+                  </Box>
 
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="h5" fontWeight="700" sx={{ mb: 4 }}>
-                    {questionnaire.questions[step - 1].text}
-                  </Typography>
-                  {renderQuestionInput(questionnaire.questions[step - 1])}
-                </Box>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="h5" fontWeight="700" sx={{ mb: 4 }}>
+                      {questionnaire.questions[step - 1].text}
+                    </Typography>
+                    {renderQuestionInput(questionnaire.questions[step - 1])}
+                  </Box>
 
-                <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    onClick={handleBack}
-                    disabled={step === 1}
-                    sx={{ borderRadius: "50px" }}
-                  >
-                    Back
-                  </Button>
-                  {step === questionnaire.questions.length ? (
+                  <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
                     <Button
-                      variant="contained"
+                      variant="outlined"
                       fullWidth
-                      onClick={handleSubmit}
-                      disabled={loading}
+                      onClick={handleBack}
+                      disabled={step === 1}
                       sx={{ borderRadius: "50px" }}
                     >
-                      {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
+                      Back
                     </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      onClick={handleNext}
-                      sx={{ borderRadius: "50px" }}
-                    >
-                      Next
-                    </Button>
-                  )}
-                </Stack>
-              </Box>
-            )}
+                    {step === questionnaire.questions.length ? (
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={handleSubmit}
+                        disabled={loading}
+                        sx={{ borderRadius: "50px" }}
+                      >
+                        {loading ? (
+                          <CircularProgress size={24} color="inherit" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={handleNext}
+                        sx={{ borderRadius: "50px" }}
+                      >
+                        Next
+                      </Button>
+                    )}
+                  </Stack>
+                </Box>
+              )}
 
             {/* SUCCESS STEP */}
             {submitted && (
